@@ -33,9 +33,6 @@ const Home = ({ }) => {
     navigation.navigate('Gameboard', { playerName: playerName }); // Navigate to the Gameboard screen with the player's name
   };
 
-  const handleLogout = () => {
-    setShowRules(false); // Hide the rules
-  };
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -55,7 +52,6 @@ const Home = ({ }) => {
           <Pressable style={[styles.button, styles.dropShadow]} onPress={handlePlay}>
             <Text style={styles.buttonText}>Play</Text>
           </Pressable>
-          <Button title="Log out" onPress={handleLogout} />
         </View>
       ) : (
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>

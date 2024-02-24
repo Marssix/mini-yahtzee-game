@@ -11,13 +11,13 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarActiveTintColor: 'skyblue',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
-          display: 'flex'
+          display: route.name === 'Home' ? 'none' : 'flex' // Hide tab bar on the Home screen
         }
-      }}
+      })}
     >
       <Tab.Screen
         name="Home" 

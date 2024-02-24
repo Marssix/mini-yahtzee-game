@@ -145,7 +145,7 @@ export const Gameboard = ({ route }) => {
 
     const useNbr = (i) => {
         const nbrs = [...usedNbrs];
-        if (state.nbrSelectPossible && !nbrs[i]) {
+        if (nbrOfThrowsLeft === 0 && state.nbrSelectPossible && !nbrs[i]) {
             if (i >= MIN_SPOT - 1 && i <= MAX_SPOT - 1) {
                 nbrs[i] = true;
                 let tempSum = 0;
@@ -164,8 +164,11 @@ export const Gameboard = ({ route }) => {
             }
         } else if (nbrs[i]) {
             setState(prevState => ({ ...prevState, status: "You already selected points for " + (i + 1) }));
+        } else {
+            setState(prevState => ({ ...prevState, status: "You cannot select a score until you have no throws left." }));
         }
     };
+    
 
     const checkBonus = () => {
         if (sum >= BONUS_POINTS_LIMIT) {

@@ -64,7 +64,8 @@ export default StyleSheet.create({
     width: 150,
     borderRadius: 15,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 100,
   },
   buttonText: {
     color:"#2B2B52",
@@ -88,13 +89,13 @@ export default StyleSheet.create({
   },
   scoreboardText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold', 
     fontFamily: 'Arial', 
-    paddingTop: 15,
+    paddingTop: 3,
     marginBottom: 3, // Increase marginBottom for better spacing
     top: 0, // Align the text to the top of the container
-    paddingLeft: 20,
+    paddingLeft: 5,
     
   },
   rulesText: {
@@ -148,8 +149,12 @@ nameInput:{
 },
 welcomeText:{
   fontSize: 30,
-  fontWeight: 'bold', 
-  fontStyle: 'helvetica',
+  fontStyle: 'italic',
   color: '#18C00D',
-}
+},
+horizontal: {
+  flexDirection: 'row',
+  paddingLeft: 15,
+  alignItems: 'center',
+},
 });

@@ -49,26 +49,28 @@ const Scoreboard = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.topScoresText}>Top {SCOREBOARD_SIZE} Scores</Text> {/* Display top scores text */}
+            <Text style={styles.topScoresText}>Top {SCOREBOARD_SIZE} Scores</Text>
             <View style={styles.scoreboardContainer}>
                 <View style={styles.scoreHeader}>
-                    <Text style={styles.scoreLabel}>Player</Text> {/* Display player label */}
-                    <Text style={styles.scoreLabel}>Date</Text> {/* Display date label */}
-                    <Text style={styles.scoreLabel}>Score</Text> {/* Display score label */}
+                    <Text style={styles.scoreLabel}>Player</Text>
+                    <Text style={styles.scoreLabel}>Date</Text>
+                    <Text style={styles.scoreLabel}>Score</Text>
                 </View>
-                {scoreboard.length > 0 ? ( // If scoreboard data exists
+                {scoreboard.length > 0 ? (
                     scoreboard.map((entry, index) => (
-                        <Text key={index} style={styles.scoreboardText}>
-                            {entry.playerName}        {entry.scoreTime}             {entry.totalScore} {/* Display scoreboard entry */}
-                        </Text>
+                        <View key={index} style={[styles.scoreboardEntry, styles.horizontal]}>
+                            <Text style={styles.scoreboardText}>{entry.playerName + "           "}</Text>
+                            <Text style={styles.scoreboardText}>{entry.scoreTime + "              "}</Text>
+                            <Text style={styles.scoreboardText}>{entry.totalScore}</Text>
+                        </View>
                     ))
                 ) : (
-                    <Text style={[styles.scoreboardText, {textAlign: 'center'}]}>No scores yet.</Text> // Display message for no scores
+                    <Text style={[styles.scoreLabel, { textAlign: 'center' }]}>No scores yet.</Text>
                 )}
+                <Pressable style={[styles.clearButton, styles.dropShadow]} onPress={clearScores}>
+                    <Text style={styles.clearButtonText}>Clear Scores</Text>
+                </Pressable>
             </View>
-            <Pressable style={[styles.clearButton, styles.dropShadow]} onPress={clearScores}>
-                <Text style={styles.clearButtonText}>{'Clear Scores'}</Text> {/* Button to clear scores */}
-            </Pressable>
         </View>
     );
 };
