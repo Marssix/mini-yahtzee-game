@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Pressable, Text, View, Button, ActivityIndicator, Alert } from 'react-native';
-import AsyncStorage from 'react-native'; // Import AsyncStorage from 'react-native'
+import { Pressable, Text, View, ActivityIndicator, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import styles from '../style/style';
 
+// Constants for game logic
 export const NBR_OF_DICES = 5;
 export const NBR_OF_THROWS = 3;
-export const SUM_FOR_BONUS = 63;
-export const BONUS = 50;
+export const BONUS_POINTS_LIMIT = 63;
+export const BONUS_POINTS = 50;
 export const MIN_SPOT = 1;
 export const MAX_SPOT = 6;
 
 const SCOREBOARD_SIZE = 5;
 
+// Initial state for the game
 const initialState = {
     board: [],
     nbrSum: Array(6).fill(0),
@@ -26,47 +28,52 @@ const initialState = {
     status: '',
     selectedDices: Array(NBR_OF_DICES).fill(false),
     usedNbrs: Array(6).fill(false),
-    gameOver: false
+    gameOver: false // Duplicate key, consider removing
 };
 
-const Gameboard = ({ playerName }) => {
+export const Gameboard = ({ route }) => {
+    const { playerName } = route.params;
     const [state, setState] = useState(initialState);
     const [totalScore, setTotalScore] = useState(0);
-    const [totalTime, setTotalTime] = useState(null);
+    const [scoreTime, setScoreTime] = useState(null);
     const [loading, setLoading] = useState(true); // State for loading indicator
 
     useEffect(() => {
-        checkGameStatus();
+        checkGameStatus(); // Check the game status
         let total = state.sum;
-        if (total >= SUM_FOR_BONUS) {
-            setState(prevState => ({ ...prevState, getBonus: true }));
-            total += BONUS;
+        if (total >= BONUS_POINTS_LIMIT) { // Check if the total score is greater than or equal to the bonus points limit
+            setState(prevState => ({ ...prevState, getBonus: true })); // Update state to indicate bonus eligibility
+            total += BONUS_POINTS; // Add bonus points to the total score
         }
-        setTotalScore(total);
-        if (state.gameOver) {
+        setTotalScore(total); // Set the total score
+        if (state.gameOver) { // Check if the game is over
             const currentDate = new Date();
             const formattedTime = currentDate.getDate() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getFullYear();
-            setTotalTime(formattedTime);
-            addScoreToScoreboard(playerName); // Pass playerName to addScoreToScoreboard
-            Alert.alert("Your total score was: " + total);
+            setScoreTime(formattedTime); // Set the score time
+            addScoreToScoreboard(total, formattedTime); // Add the score to the scoreboard
+            Alert.alert("Your total score was: " + total); // Show an alert with the total score
         }
-        setLoading(false);
+        setLoading(false); // Set loading state to false
     }, [state.sum, state.getBonus, state.nbrOfThrowsLeft, state.gameOver]);
+    
 
     const { board, selectedDices, usedNbrs, nbrOfThrowsLeft, gameOver, sum } = state;
 
-    const addScoreToScoreboard = async (playerName) => {
+    // Function to add score to scoreboard
+    const addScoreToScoreboard = async (totalScore, scoreTime) => {
         try {
             const scoreboardData = await AsyncStorage.getItem('scoreboard');
             let scoreboard = [];
             if (scoreboardData !== null) {
                 scoreboard = JSON.parse(scoreboardData);
             }
-            const newScoreboardEntry = { playerName, score: totalScore, time: totalTime };
+    
+            const newScoreboardEntry = { playerName, totalScore, scoreTime }; // Create a new scoreboard entry
             const newScoreboard = [...scoreboard, newScoreboardEntry];
-            newScoreboard.sort((a, b) => b.score - a.score);
-            const updatedScoreboard = newScoreboard.slice(0, SCOREBOARD_SIZE);
-            await AsyncStorage.setItem('scoreboard', JSON.stringify(updatedScoreboard));
+            newScoreboard.sort((a, b) => b.totalScore - a.totalScore); // Sort the scoreboard entries by total score
+            const updatedScoreboard = newScoreboard.slice(0, SCOREBOARD_SIZE); // Get the top entries up to the scoreboard size
+            await AsyncStorage.setItem('scoreboard', JSON.stringify(updatedScoreboard)); // Update the scoreboard in AsyncStorage
+            console.log(updatedScoreboard);
         } catch (error) {
             console.error('Error adding score to scoreboard:', error);
         }
@@ -83,21 +90,43 @@ const Gameboard = ({ playerName }) => {
             setState(prevState => ({ ...prevState, status: 'Game over! All points selected.', throwPossible: false, diceSelectPossible: false, nbrSelectPossible: false, gameOver: true }));
         }
 
-        if (sum >= SUM_FOR_BONUS && !state.getBonus) {
+        if (sum >= BONUS_POINTS_LIMIT && !state.getBonus) {
             setState(prevState => ({ ...prevState, getBonus: true }));
         }
     };
 
     const selectDice = (i) => {
-        if (state.diceSelectPossible) {
-            const dices = [...selectedDices];
-            dices[i] = !dices[i];
-            setState(prevState => ({ ...prevState, selectedDices: dices }));
+        const clickedDiceValue = parseInt(board[i].match(/(\d+)/)[0]); // Get the value of the clicked dice
+        const dices = [...selectedDices]; // Create a copy of the selectedDices array
+    
+        // If the clicked dice is already selected, toggle its selection
+        if (dices[i]) {
+            dices[i] = false; // Deselect the clicked dice
+    
+            // Unselect all dices with the same value as the clicked dice
+            for (let j = 0; j < NBR_OF_DICES; j++) {
+                const diceValue = parseInt(board[j].match(/(\d+)/)[0]);
+                if (diceValue === clickedDiceValue) {
+                    dices[j] = false; // Deselect the dice with the same value
+                }
+            }
         } else {
-            setState(prevState => ({ ...prevState, status: "You have to throw dices first." }));
-            Alert.alert("Your have to throw a dice first!")
+            // Clear the selection of all dices
+            dices.fill(false);
+            
+            // Select all dices with the same value as the clicked dice
+            for (let j = 0; j < NBR_OF_DICES; j++) {
+                const diceValue = parseInt(board[j].match(/(\d+)/)[0]);
+                if (diceValue === clickedDiceValue) {
+                    dices[j] = true; // Set to true if dice value matches clicked dice value
+                }
+            }
         }
+    
+        setState(prevState => ({ ...prevState, selectedDices: dices }));
     };
+    
+    
 
     const throwDices = () => {
         if (state.throwPossible && !gameOver) {
@@ -122,7 +151,7 @@ const Gameboard = ({ playerName }) => {
                 let tempSum = 0;
                 for (let x = 0; x < selectedDices.length; x++) {
                     const diceVal = parseInt(board[x].match(/(\d+)/)[0]);
-                    if (diceVal - 1 === i) {
+                    if (diceVal - 1 === i && selectedDices[x]) {
                         tempSum += diceVal;
                     }
                 }
@@ -139,10 +168,10 @@ const Gameboard = ({ playerName }) => {
     };
 
     const checkBonus = () => {
-        if (sum >= SUM_FOR_BONUS) {
+        if (sum >= BONUS_POINTS_LIMIT) {
             return "You got the Bonus!";
         } else {
-            return "You are " + (SUM_FOR_BONUS - sum) + " points away from bonus.";
+            return "You are " + (BONUS_POINTS_LIMIT - sum) + " points away from bonus.";
         }
     };
 
@@ -176,7 +205,7 @@ const Gameboard = ({ playerName }) => {
         for (let i = 0; i < 6; i++) {
             nbrRow.push(
                 <View style={styles.numbers} key={"nbrRow" + i}>
-                    <Text style={styles.nbrSum}>{state.nbrSum[i]}</Text>
+                    <Text style={[styles.nbrSum, {paddingLeft: 20, paddingTop: 10, paddingBottom: 10,}]}>{state.nbrSum[i]}</Text>
                     <Pressable
                         key={"nbrRow" + i}
                         onPress={() => useNbr(i)}
@@ -204,7 +233,6 @@ const Gameboard = ({ playerName }) => {
             <Pressable style={[styles.button, styles.dropShadow]} onPress={throwDices}>
                 <Text style={styles.buttonText}>{gameOver ? 'New Game' : 'Throw dices'}</Text>
             </Pressable>
-            {/* Display the total score or a loading indicator */}
             {loading ? (
                 <ActivityIndicator size="large" color="skyblue" /> // Display loading indicator
             ) : (
@@ -217,5 +245,6 @@ const Gameboard = ({ playerName }) => {
         </View>
     );
 };
+
 
 export default Gameboard;

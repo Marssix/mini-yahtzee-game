@@ -10,6 +10,7 @@ export default StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#F64DFC',
     flexDirection: 'row',
+    justifyContent: 'center'
   },
   footer: {
     position: 'absolute',
@@ -19,7 +20,9 @@ export default StyleSheet.create({
     right: 0,
     marginTop: 20,
     backgroundColor: '#F64DFC',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center'
   },
   title: {
     color: '#fff',
@@ -57,7 +60,7 @@ export default StyleSheet.create({
     margin: 30,
     flexDirection: "row",
     padding: 10,
-    backgroundColor: "#62E8EA",
+    backgroundColor: "#63d66e",
     width: 150,
     borderRadius: 15,
     justifyContent: 'center',
@@ -76,22 +79,77 @@ export default StyleSheet.create({
     backgroundColor: '#63d66e', 
   },
   scoreboardContainer: {
-    backgroundColor: '#63d66e',
+    backgroundColor: '#975CF2',
     borderRadius: 10, 
     padding: 20, // Increase padding for better spacing
-    alignItems: 'center', 
-    marginTop: 20, 
-    minHeight: 100, // Reduce minHeight to ensure visibility of text
-    justifyContent: 'center', // Align content to the top
+    marginTop: 10, 
+    height: 400,
+    justifyContent: 'top', // Align content to the top
   },
   scoreboardText: {
-    color: 'black',
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold', 
     fontFamily: 'Arial', 
-    padding: 20,
-    marginBottom: 300, // Increase marginBottom for better spacing
-    textAlign: 'center', // Center the text horizontally
+    paddingTop: 15,
+    marginBottom: 3, // Increase marginBottom for better spacing
     top: 0, // Align the text to the top of the container
+    paddingLeft: 20,
+    
   },
+  rulesText: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: 'bold', 
+    fontFamily: 'Arial',
+    textAlign: 'center',
+    padding: 7,
+  },
+  topScoresText: {
+    color: 'black',
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  scoreHeader:{
+    marginTop: 10,
+    marginBottom: 15,
+    flexDirection: 'row',
+  },
+  scoreLabel:{
+    paddingHorizontal: 35,
+    fontWeight: 'bold',
+  },
+clearButton:{
+  margin: 30,
+    flexDirection: "row",
+    padding: 10,
+    marginTop: 50,
+    backgroundColor: "#FF0059",
+    width: 150,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+},
+clearButtonText: {
+  color:"#fff",
+  fontSize: 20
+},
+nameInput:{
+  height: 40,
+    width: 200,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    textAlign: 'center',
+},
+welcomeText:{
+  fontSize: 30,
+  fontWeight: 'bold', 
+  fontStyle: 'helvetica',
+  color: '#18C00D',
+}
 });
