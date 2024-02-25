@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Pressable, View, Text, TextInput, Button, Keyboard, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { NBR_OF_DICES, NBR_OF_THROWS, MAX_SPOT, MIN_SPOT, BONUS_POINTS_LIMIT, BONUS_POINTS } from './Gameboard'; // Importing constants from Gameboard
-import styles from '../style/style' // Importing styles
+import { NBR_OF_DICES, NBR_OF_THROWS, MAX_SPOT, MIN_SPOT, BONUS_POINTS_LIMIT, BONUS_POINTS } from './Gameboard'; 
+import styles from '../style/style';
 
 const Home = ({ }) => {
   const [playerName, setPlayerName] = useState(''); // State to store the player's name
@@ -54,21 +54,22 @@ const Home = ({ }) => {
           </Pressable>
         </View>
       ) : (
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={[styles.rulesText, { paddingBottom: 20 }]}>Please enter your name:</Text>
-          <TextInput
-            ref={inputRef}
-            style={styles.nameInput}
-            onChangeText={text => setPlayerName(text)}
-            value={playerName}
-          />
-          <Button
-            title="Next"
-            onPress={handleNext}
-            disabled={!playerName.trim()} // Disable the Next button if player name is empty
-            titleStyle={{ textAlign: 'center' }}
-          />
-        </View>
+        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: -60 }}>
+    <Text style={[styles.rulesText, { paddingBottom: 20 }]}>Please enter your name:</Text>
+    <TextInput
+        ref={inputRef}
+        style={styles.nameInput}
+        onChangeText={text => setPlayerName(text)}
+        value={playerName}
+    />
+    <Button
+        title="Next"
+        onPress={handleNext}
+        disabled={!playerName.trim()} // Disable the Next button if player name is empty
+        titleStyle={{ textAlign: 'center' }}
+    />
+</View>
+
       )}
     </View>
   );

@@ -86,6 +86,7 @@ export default StyleSheet.create({
     marginTop: 10, 
     height: 400,
     justifyContent: 'top', // Align content to the top
+    alignItems: 'center',
   },
   scoreboardText: {
     color: 'white',
@@ -120,6 +121,7 @@ export default StyleSheet.create({
   scoreLabel:{
     paddingHorizontal: 35,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 clearButton:{
   margin: 30,
@@ -154,7 +156,7 @@ welcomeText:{
 },
 horizontal: {
   flexDirection: 'row',
-  paddingLeft: 15,
   alignItems: 'center',
+  paddingRight:40,
 },
 });

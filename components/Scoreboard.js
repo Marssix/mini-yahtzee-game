@@ -59,10 +59,13 @@ const Scoreboard = () => {
                 {scoreboard.length > 0 ? (
                     scoreboard.map((entry, index) => (
                         <View key={index} style={[styles.scoreboardEntry, styles.horizontal]}>
-                            <Text style={styles.scoreboardText}>{entry.playerName + "           "}</Text>
-                            <Text style={styles.scoreboardText}>{entry.scoreTime + "              "}</Text>
-                            <Text style={styles.scoreboardText}>{entry.totalScore}</Text>
+                            <Text style={[styles.scoreboardText, { paddingLeft: 20 }]}>{entry.playerName + "        "}</Text>
+                            <Text style={[styles.scoreboardText, { paddingLeft: 10 }]}>{entry.scoreTime + "       "}</Text>
+                            <Text style={[styles.scoreboardText, { paddingLeft: 30 }]}>
+                                {entry.totalScore}
+                            </Text>
                         </View>
+
                     ))
                 ) : (
                     <Text style={[styles.scoreLabel, { textAlign: 'center' }]}>No scores yet.</Text>
